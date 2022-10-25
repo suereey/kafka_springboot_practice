@@ -16,7 +16,7 @@ Parition
 - Partitions allow Kafka to scale horizontally and also provide redundancy. 
 - Each partition can be hosted on a different server, which allows new partitions to be added to a topic as the load on the system increases.
 
-    ![](screenshot/09292022_KafkaEducativeio/Screen%20Shot%202022-09-29%20at%205.01.11%20PM.png)
+![](support_pic/Screen%20Shot%202022-09-29%20at%205.01.11%20PM.png)
 
 Message Key
 
@@ -31,7 +31,7 @@ Schemas
 - Within a cluster, a single broker owns a partition and is said to be the **leader**. Others called **follower**.
 - **Every producer and consumer interacting with the partition must connect to the leader for that partition.**
 
-![](screenshot/09292022_KafkaEducativeio/Screen%20Shot%202022-09-29%20at%205.10.15%20PM.png)
+![](support_pic/Screen%20Shot%202022-09-29%20at%205.10.15%20PM.png)
 
 **Producer create messages**
 
@@ -42,14 +42,14 @@ Schemas
 
 1 consumer can listen multiple partitions.
 
-![](screenshot/09292022_KafkaEducativeio/Screen%20Shot%202022-09-29%20at%205.15.49%20PM.png)
+![](support_pic/Screen%20Shot%202022-09-29%20at%205.15.49%20PM.png)
 
 A **partition rebalance** assigns the partitions that the dead consumer was reading from to the remaining healthy consumers in a consumer group. 
 
 # Kafka Producer
 
 ## Producer workflow
-![](screenshot/09292022_KafkaEducativeio/Screen%20Shot%202022-09-29%20at%205.34.38%20PM.png)
+![](support_pic/Screen%20Shot%202022-09-29%20at%205.34.38%20PM.png)
 
 Producer sending message
 - Fire and forget
@@ -129,3 +129,23 @@ public class SingleConsumerExample {
     }
 }
 ```
+
+## Kafka controller
+
+**kafka cluster consist of several kafka brokers working together**
+
+Brokers maintain their membership in a cluster via a unique ID that is set either in the configuration file or automatically generated. Each broker creates an ephemeral node in Zookeeper with its ID under the Zookeeper path /brokers/id.
+
+A new broker can’t register itself with the same ID as an existing broker. 
+
+A broker can lose connectivity to Zookeeper for a variety of reasons such as:
+- broker deliberately stopping
+- garbage collector pause
+- network partition
+
+**Kafka controller is a broker with additional responsibilities of choosing leaders for partitions whenever nodes leave a cluster.**
+- Each broker attempts to create the ephemeral node /controller when starting up.
+
+- The first broker that successfully creates the node becomes the controller while the rest receive a “node already exists” exception.
+
+![](support_pic/kafka_broker.png)
